@@ -17,3 +17,5 @@ This Django project uses the power of building local AI-powered chat application
 chat/: Contains the Django app for the chat interface and Ollama interaction.
 templates/: HTML template for the chat interface.
 requirements.txt: Lists the project dependencies.
+
+For more detailed information read documentation.docx
