@@ -1,11 +1,28 @@
-<!DOCTYPE html> 
-<html> 
-    <head> 
+{% extends "authentification/index.html" %}
+    {% block metatags %}
         <title>
             form creation
-        </title> 
-    </head> 
-    <body>
-        <div>Form creation chat</div>
-    </body>
-</html>
+        </title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    </script>
+    {% endblock metatags %}
+    {% block body %}
+    <div class="container">
+      <h2>Chat with AI</h2>
+
+      <div id="chat-history">
+          {% for message in chat_history %}
+              <p><strong>{{ message.role|capfirst }}:</strong> {{ message.message }}</p>
+          {% endfor %}
+      </div>
+        <form method="POST" action="/form-creation/">
+            {% csrf_token %}
+            <div class="form-group">
+                <input type="text" name="user_input" class="form-control" placeholder="Type your message" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Send</button>
+        </form>
+    </div>
+    
+    {% endblock body %}

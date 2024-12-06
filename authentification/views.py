@@ -67,4 +67,4 @@ def signin(request):
 def signout(request):
     logout(request)
     messages.success(request,'Logged out')
-    return redirect('index')
+    return redirect(index)
