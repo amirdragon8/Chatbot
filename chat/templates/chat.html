@@ -1,46 +1,30 @@
 {% extends "authentification/index.html" %}
 {% block metatags %}
-    <title>Django Chat App</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-      $(document).ready(function () {
-        $("#chat-form").submit(function (event) {
-          event.preventDefault();
-          var userInput = $("#user-input").val();
-          $("#user-input").val("");
-          $("#chat-history").append(
-            "<p><strong>User:</strong></p><p>" + userInput + "</p>"
-          );
-          var aiResponseElement = $("<p>");
-          $("#chat-history").append($("<strong>").text("AI:"));
-          $("#chat-history").append(aiResponseElement);
-          $.ajax({
-            type: "POST",
-            url: "/chat/",
-            data: { user_input: userInput },
-            xhrFields: {
-              onprogress: function (xhr) {
-                var response = xhr.target.responseText;
-                console.log(xhr);
-                console.log(response);
-                aiResponseElement.html(function (i, oldHtml) {
-                  return response;
-                });
-              },
-            },
-          });
-        });
-      });
-    </script>
-    {% endblock metatags %}
-    {% block body %}
-    <h5 class="card-title fw-400">Chat</h5>
-            <div><i><a href="/">Home page</a></i></div>
-            <div><i><a href="/form-creation">Form creation</a></i></div>
-            <hr>
-    <div id="chat-history"></div>
-    <form id="chat-form">
-      <input type="text" id="user-input" name="user_input" required />
-      <button type="submit">Send</button>
-    </form>
-    {% endblock body %}
+<title>Django Chat App</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+
+</script>
+{% endblock metatags %}
+{% block body %}
+<div class="container"></div>
+<h2>Chat</h2>
+<div><i><a href="/">Home page</a></i></div>
+<div><i><a href="/form-creation">Task creation</a></i></div>
+<div><i><a href="/user-creation">User creation</a></i></div>
+<div><i><a href="/vonboard">Volunteer profile completion</a></i></div>
+<hr>
+<div id="chat-history">
+    {% for message in chat_history %}
+    <p><strong>{{ message.role|capfirst }}:</strong> {{ message.message }}</p>
+    {% endfor %}
+</div>
+<form method="POST" action="/chat/">
+    {% csrf_token %}
+    <div class="form-group">
+        <input type="text" name="user_input" class="form-control" placeholder="Type your message" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Send</button>
+</form>
+</div>
+{% endblock body %}

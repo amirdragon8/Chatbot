@@ -1,0 +1,32 @@
+{% extends "authentification/index.html" %}
+{% block metatags %}
+<title>Tasks Created by {{ username }}</title>
+{% endblock metatags %}
+{% block body %}
+<h1>Tasks Created by {{ username }}</h1>
+
+{% if tasks %}
+<div class="container my-4">
+    <div class="row">
+        {% for task in tasks %}
+        <div class="col-md-4 col-sm-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ task.name }}</h5>
+                    <p class="card-text">{{ task.description }}</p>
+                    <p>
+                        <small>
+                            Start: {{ task.start_date }} | End: {{ task.end_date }} <br>
+                            Created By: {{ task.created_by.get_full_name }} ({{ task.created_by.role }})
+                        </small>
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<p class="text-center">No tasks found for this user.</p>
+{% endif %}
+{% endblock body %}

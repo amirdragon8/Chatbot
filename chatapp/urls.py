@@ -19,8 +19,7 @@ from django.urls import include, path
 from chat.views import *
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path('admin/', admin.site.urls),
     path('', include('authentification.urls', namespace='authentification')),
-    path('chat/', chat_view, name='chat'),
-    path('form-creation/', form_view, name='form'),
+    path('', include('chat.urls', namespace='chat')),
 ]

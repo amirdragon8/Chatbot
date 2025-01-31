@@ -1,9 +1,12 @@
 {% extends "authentification/base.html" %}
 {% block metatags %}
-    <title>Authentification</title>
+<title>Authentification</title>
 {% endblock metatags %}
 {% block body %}
-<nav class="navbar navbar-expand navbar-light"> <a class="navbar-brand" href="/" data-abc="true">CHAVP</a> <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"></span> </button>
+<nav class="navbar navbar-expand navbar-light"> <a class="navbar-brand" href="/" data-abc="true">CHAVP</a> <button
+        class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor02"
+        aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation"> <span
+            class="navbar-toggler-icon"></span> </button>
     <div class="collapse navbar-collapse" id="navbarColor02">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active"> <a class="nav-link" href="/" data-abc="true">Home</a> </li>
@@ -12,33 +15,32 @@
         {% if user.is_authenticated%}
         <!--<h3>Hello {{user.username}} </h3>-->
         <button class="btn btn-primary" type="submit"><a href="/signout" class="link-secondary">Sign Out</a></button>
-    {% else %}
-    <button class="btn btn-primary" type="submit"><a href="/signup" class="link-secondary">Sign Up</a></button>
-    <button class="btn btn-primary" type="submit"><a href="/signin" class="link-secondary">Sign In</a></button>
-    {% endif %}
+        {% else %}
+        <button class="btn btn-primary" type="submit"><a href="/signup" class="link-secondary">Sign Up</a></button>
+        <button class="btn btn-primary" type="submit"><a href="/signin" class="link-secondary">Log In</a></button>
+        {% endif %}
     </div>
 </nav>
-    {% for message in messages %}
-        <div class="alert alert-primary alert-dismissible fade show" role="alert">
-            <strong>Message: </strong>{{message}}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>  
-        </div>
-    {% endfor %}
-    {% block content %}
-    <div class="jumbotron">
+{% for message in messages %}
+<div class="alert alert-primary alert-dismissible fade show" role="alert">
+    <strong>Message: </strong>{{message}}
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+{% endfor %}
+{% block content %}
+<div class="jumbotron">
     <h1 display-3>Welcome to Chatbot-assitant for Volunteers portal</h1>
     <p class="lead">
         AI-assisted chatbot system for Austrian volunteers portal
-        <ul>
-            <li>Onboarding </li>
-            <li>Explaining main points and ideas about volunteers</li>
-            <li>Llama3 powered</li>
-        </ul> 
+    <ul>
+        <li>Onboarding </li>
+        <li>Explaining main points and ideas about volunteers</li>
+        <li>Llama3 powered</li>
+    </ul>
     </p>
-        <a class="btn btn-lg btn-primary" href="/chat" role="button">Start &raquo;</a>
-    </div>
-    {% endblock content %}
+    <a class="btn btn-lg btn-primary" href="/chat" role="button">Start &raquo;</a>
+</div>
+{% endblock content %}
 {% endblock body %}
-

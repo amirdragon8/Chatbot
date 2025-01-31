@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 
+from authentification.forms import RegistrationForm
+from authentification.models import CustomUser
+
 # Create your views here.
 
 def index(request):
@@ -11,60 +14,75 @@ def index(request):
 
 def signup(request):
     if request.method == 'POST':
-        #username = request.POST.get('username')
-        username = request.POST['username']
-        fname = request.POST['fname']
-        sname = request.POST['sname']
-        email = request.POST['email']
-        password1 = request.POST['password1']
-        password2 = request.POST['password2']
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            # Create the user
+            user = CustomUser.objects.create_user(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password'],
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                role=form.cleaned_data['role'],
+            )
+            # Log in the user after registration
+            login(request, user)
 
-        if User.objects.filter(username=username):
-            messages.error(request, "Username already exist! Please try some other username.")
-            return redirect('index')
-        
-        if User.objects.filter(email=email).exists():
-            messages.error(request, "Email Already Registered!!")
-            return redirect('index')
-        
-        if len(username)>25:
-            messages.error(request, "Username must be under 20 charcters!!")
-            return redirect('index')
-        
-        if password1 != password2:
-            messages.error(request, "Passwords didn't matched!!")
-            return redirect('index')
-        
-        if not username.isalnum():
-            messages.error(request, "Username must be Alpha-Numeric!!")
-            return redirect('index')
+            # Redirect to role-specific profile completion page
+            if user.role == 'VOLUNTEER':
+                return redirect('authentification:complete_volunteer_profile')  
+            elif user.role == 'NPO_MANAGER':
+                return redirect('authentification:complete_npo_profile')  
 
-        newUser = User.objects.create_user(username, email, password1)
-        newUser.first_name = fname
-        newUser.last_name = sname
-        newUser.save()
+            messages.success(request, "Registration successful!")
+            return redirect('authentification:index')  # Fallback redirect
+        else:
+            for field, errors in form.errors.items():
+                messages.error(request, f"{field}: {', '.join(errors)}")
+            return redirect('authentification:signup')  # Replace with the name of your registration URL
+    else:
+        form = RegistrationForm()
 
-        messages.success(request, 'your account created')
-        return redirect('signin')
-
-    return render(request, 'authentification/signup.html')
+    return render(request, 'authentification/signup.html', {'form': form})
 
 def signin(request):
     if request.method == 'POST':
-        username = request.POST['username']
-        password1 = request.POST['password1']
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-        user = authenticate(username=username,password= password1)
+        # Validate inputs
+        if not username or not password:
+            messages.error(request, "Both username and password are required!")
+            return redirect('authentification:signin')
+
+        try:
+            user = CustomUser.objects.get(username=username)
+        except CustomUser.DoesNotExist:
+            messages.error(request, "User does not exist. Please register first!")
+            return redirect('authentification:signin')
+
+        # Authenticate user
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
             fname = user.first_name
-            return render(request,'authentification/index.html', {'fname': fname})
+            messages.success(request, f"Welcome back, {fname}!")
+            return redirect('authentification:index')  # Redirect home page URL name
         else:
-            messages.error(request, 'Wrong credentials')
-            return redirect('index')
-    return render(request, 'authentification/signin.html')
+            messages.error(request, "Invalid credentials. Please try again.")
+            return redirect('authentification:signin')
+    else:
+        return render(request, 'authentification/signin.html')
 
 def signout(request):
     logout(request)
     messages.success(request,'Logged out')
-    return redirect(index)
+    return redirect('authentification:index')
+
+def complete_volunteer_profile(request):
+    messages.success(request,'Volunteer profile is under work')
+    return redirect('authentification:index')
+
+def complete_npo_profile(request):
+    messages.success(request,'NPO profile is under work')
+    return redirect('authentification:index')

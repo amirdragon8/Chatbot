@@ -1,7 +1,7 @@
 {% extends "authentification/index.html" %}
 {% block metatags %}
 <title>
-    form creation
+    volunteer profile
 </title>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
@@ -9,15 +9,25 @@
 {% endblock metatags %}
 {% block body %}
 <div class="container">
-    <h2>Chat to create Task</h2>
+    <h2>Chat to complete volunteer profile</h2>
     <div><i><a href="/">Home page</a></i></div>
     <br>
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-primary alert-dismissible fade show" role="alert">
+        <strong>Message: </strong>{{message}}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+    {% endif %}
     <div id="chat-history">
         {% for message in chat_history %}
         <p><strong>{{ message.role|capfirst }}:</strong> {{ message.message }}</p>
         {% endfor %}
     </div>
-    <form method="POST" action="/form-creation/">
+    <form method="POST" action="/vonboard/">
         {% csrf_token %}
         <div class="form-group">
             <input type="text" name="user_input" class="form-control" placeholder="Type your message" required>

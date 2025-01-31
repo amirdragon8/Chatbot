@@ -1,31 +1,45 @@
 {% extends "authentification/base.html" %}
 
 {% block metatags %}
-    <title>Sign In</title>
+<title>Sign In</title>
 {% endblock metatags %}
 {% block body %}
-    <div class="page-content page-container" id="page-content">
-        <div class="padding">
-            <div class="row container d-flex justify-content-center">
-    <div class="col-md-6 col-lg-4">
-                <form class="card" action="/signin" method="post">
-                {% csrf_token %}
-                  <h5 class="card-title fw-400">Sign In</h5>
-                  <div class="card-body">
-                    <div class="form-group">
-                      <input class="form-control" type="text" id="username" name="username" placeholder="Username" required>
-                    </div>
-                    <div class="form-group">
-                      <input class="form-control" type="password" id="password1" name="password1" placeholder="Password" required>
-                    </div>
-                    <button class="btn btn-block btn-bold btn-primary" type="submit">Sign In</button>
-                  </div>
-                </form>
-                <br>
-                <hr>
-                <div><i><a href="/">Home page</a></i></div>
-              </div>
-               </div>
-                </div>
-                 </div>
+<div class="page-content page-container" id="page-content">
+  <div class="padding">
+    <div class="row container d-flex justify-content-center">
+      <div class="col-md-6 col-lg-4">
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+          <strong>Message: </strong>{{message}}
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <form class="card" method="post">
+          {% csrf_token %}
+          <h5 class="card-title fw-400">Sign In</h5>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="username">Username:</label>
+              <input class="form-control" type="text" name="username" id="username" required>
+            </div>
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <input class="form-control" type="password" name="password" id="password" required>
+            </div>
+            <button class="btn btn-block btn-bold btn-primary" type="submit">Sign In</button>
+
+        </form>
+        <br>
+        <hr>
+        <div><i><a href="/">Home page</a></i></div>
+        <br>
+        <p>Don't have an account? <a href="{% url 'authentification:signup' %}">Register here</a>.</p>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock body %}
